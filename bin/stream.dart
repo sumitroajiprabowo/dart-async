@@ -10,102 +10,122 @@
 /// Stream.error() : Membuat stream dari sebuah error
 /// Stream.empty() : Membuat stream kosong
 
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
-// example stream from iterable
-Stream<int> getNumber(int number) async* {
-  for (var i = 1; i <= number; i++) {
-    yield i;
+// example stream from iterable using Stream.fromIterable()
+Stream<int> getNumber(int number) async* { // membuat stream dari sebuah list dengan menggunakan async*
+  for (var i = 1; i <= number; i++) { // for loop untuk membuat list berulang
+    yield i; // yield digunakan untuk mengembalikan nilai dari sebuah stream
   }
 }
 
-// example stream from periodic
-Stream<int> getPeriodic(int number) {
-  return Stream.periodic(Duration(seconds: 1), (int x) => x).take(number);
+
+Stream<String> getLists() { // membuat stream dari sebuah list tanpa menggunakan async*
+  var lists = ['Dian', 'Sastro', 'Ari', 'Lasso']; // list
+  return Stream.fromIterable(lists); // return stream dari list
 }
 
-fetchUserOrder() {
-  return Future.delayed(Duration(seconds: 3), () => 'Cappuccino');
+/*
+perbedaan menggunakan async* dan tidak menggunakan async* adalah ketika menggunakan async* kita bisa menggunakan yield
+yield digunakan untuk mengembalikan nilai dari sebuah stream
+sedangkan ketika tidak menggunakan async* kita tidak bisa menggunakan yield
+ */
+
+// example stream from periodic
+Stream<int> getPeriodic(int number) { // membuat stream integer dari sebuah list yang berulang
+  return Stream.periodic(Duration(seconds: 1), (int x) => x).take(number); // return stream dari list yang berulang
+}
+
+fetchUserOrder() { // membuat future
+  return Future.delayed(Duration(seconds: 3), () => 'Cappuccino'); // return future dengan delay 3 detik
 }
 
 // example stream from future
-Stream<String> getOrder() async* {
-  var order = await fetchUserOrder();
-  yield 'You order: $order';
+Stream<String> getOrder() async* { // membuat stream dari future dengan menggunakan async*
+  var order = await fetchUserOrder(); // await digunakan untuk menunggu future selesai
+  yield 'You order: $order'; // yield digunakan untuk mengembalikan nilai dari sebuah stream
 }
 
-// Function to fetch data asynchronously from an API
-Future<List<dynamic>> fetchData() async {
-  final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
-
-  if (response.statusCode == 200) {
-    return json.decode(response.body);
-  } else {
-    throw Exception('Failed to fetch data');
-  }
+// create fetchUserOrder() function
+Future<String> fetchUserProduct() { // membuat future
+  return Future.delayed(Duration(seconds: 3), () => 'Cappuccino'); // return future dengan delay 3 detik
 }
+
+
+// example stream from multiple future (list)
+Stream<String> getProductMultiple() async* { // membuat stream dari beberapa future dengan menggunakan async*
+  var product = await Future.wait([ // await digunakan untuk menunggu future selesai
+    fetchUserProduct(), // future 1
+    fetchUserProduct(), // future 2
+  ]);
+  yield 'You product is: $product'; // yield digunakan untuk mengembalikan nilai dari sebuah stream
+}
+
 
 // example stream value
-Stream<String> getStreamValue() async* {
-  yield 'Hello';
-  yield 'Stream';
-  yield 'Value';
+Stream<String> getStreamValue() async* { // membuat stream dari sebuah nilai dengan menggunakan async*
+  yield 'Hello'; // yield digunakan untuk mengembalikan nilai dari sebuah stream (Hello)
+  yield 'Stream'; // yield digunakan untuk mengembalikan nilai dari sebuah stream (Stream)
+  yield 'Value'; // yield digunakan untuk mengembalikan nilai dari sebuah stream (Value)
 }
 
 // example stream error
-Stream<String> getStreamError() async* {
-  yield 'Hello';
-  yield 'Stream';
-  yield 'Error';
-  throw Exception('Error');
+Stream<String> getStreamError() async* { // membuat stream dari sebuah error dengan menggunakan async*
+  yield 'Hello'; // yield digunakan untuk mengembalikan nilai dari sebuah stream
+  yield 'Stream'; // yield digunakan untuk mengembalikan nilai dari sebuah stream
+  yield 'Error'; // yield digunakan untuk mengembalikan nilai dari sebuah stream
+  throw Exception('Error'); // throw digunakan untuk mengembalikan error dari sebuah stream
 }
 
 // example stream empty
-Stream<String> getStreamEmpty() async* {}
+Stream<String> getStreamEmpty() async* {} // membuat stream kosong dengan menggunakan async*
 
 
 void main() async {
+  print("Stream from iterable using Stream.fromIterable() with async*");
   // example stream from iterable
-  getNumber(5).listen((event) {
-    print(event);
+  getNumber(5).listen((event) { // listen digunakan untuk menampilkan data dari sebuah stream (stream integer)
+    print(event); // print data dari sebuah stream (stream integer)
   });
 
   // new line
   print('');
 
+  print("Stream from iterable using Stream.fromIterable() without async*");
   // example stream from periodic
-  getPeriodic(5).listen((event) {
-    print(event);
-  });
+  getPeriodic(5).listen((event) { // listen digunakan untuk menampilkan data dari sebuah stream (stream integer)
+    print(event); // print data dari sebuah stream (stream integer)
+  }); // print data dari sebuah stream (stream integer)
 
+
+  // new line
+  print('');
+
+  print("Stream from periodic");
   // example stream from future
-  getOrder().listen((event) {
-    print(event);
+  getOrder().listen((event) { // listen digunakan untuk menampilkan data dari sebuah stream (stream string)
+    print(event); // print data dari sebuah stream (stream string)
   });
 
-  print('Fetching data...');
+  // new line
+  print('');
 
-  final future = fetchData(); // Call the function to get a future object
-
-  future.then((data) {
-    print('Data fetched successfully:');
-    for (var item in data) {
-      print('Title: ${item['title']}');
-      print('Body: ${item['body']}');
-      print('---');
-    }
-  }).catchError((error) {
-    print('Error occurred: $error');
-  }).whenComplete(() {
-    print('Program completed');
+  print("Stream from multiple future (list)");
+  // example stream from multiple future (list)
+  getProductMultiple().listen((event) { // listen digunakan untuk menampilkan data dari sebuah stream (stream string)
+    print(event); // print data dari sebuah stream (stream string)
   });
 
+  // new line
+  print('');
+
+  print("Stream value");
   // example stream value
   getStreamValue().listen((event) {
     print(event);
   });
 
+  print('');
+
+  print("Stream error");
   // example stream error
   getStreamError().listen((event) {
     print(event);
@@ -113,6 +133,9 @@ void main() async {
     print(err);
   });
 
+  print('');
+
+  print("Stream empty");
   // example stream empty
   getStreamEmpty().listen((event) {
     print(event);

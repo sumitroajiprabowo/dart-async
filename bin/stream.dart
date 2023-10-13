@@ -10,17 +10,16 @@
 /// Stream.error() : Membuat stream dari sebuah error
 /// Stream.empty() : Membuat stream kosong
 
+Stream<String> getLists() { // membuat stream dari sebuah list tanpa menggunakan async*
+  var lists = ['Dian', 'Sastro', 'Ari', 'Lasso']; // list
+  return Stream.fromIterable(lists); // return stream dari list
+}
+
 // example stream from iterable using Stream.fromIterable()
 Stream<int> getNumber(int number) async* { // membuat stream dari sebuah list dengan menggunakan async*
   for (var i = 1; i <= number; i++) { // for loop untuk membuat list berulang
     yield i; // yield digunakan untuk mengembalikan nilai dari sebuah stream
   }
-}
-
-
-Stream<String> getLists() { // membuat stream dari sebuah list tanpa menggunakan async*
-  var lists = ['Dian', 'Sastro', 'Ari', 'Lasso']; // list
-  return Stream.fromIterable(lists); // return stream dari list
 }
 
 /*
@@ -80,14 +79,6 @@ Stream<String> getStreamEmpty() async* {} // membuat stream kosong dengan menggu
 
 
 void main() async {
-  print("Stream from iterable using Stream.fromIterable() with async*");
-  // example stream from iterable
-  getNumber(5).listen((event) { // listen digunakan untuk menampilkan data dari sebuah stream (stream integer)
-    print(event); // print data dari sebuah stream (stream integer)
-  });
-
-  // new line
-  print('');
 
   print("Stream from iterable using Stream.fromIterable() without async*");
   // example stream from periodic
@@ -95,6 +86,15 @@ void main() async {
     print(event); // print data dari sebuah stream (stream integer)
   }); // print data dari sebuah stream (stream integer)
 
+
+  // new line
+  print('');
+
+  print("Stream from iterable using Stream.fromIterable() with async*");
+  // example stream from iterable
+  getNumber(5).listen((event) { // listen digunakan untuk menampilkan data dari sebuah stream (stream integer)
+    print(event); // print data dari sebuah stream (stream integer)
+  });
 
   // new line
   print('');

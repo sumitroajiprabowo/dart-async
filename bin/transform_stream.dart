@@ -17,6 +17,8 @@ import 'dart:async';
 /// transform digunakan untuk mengubah nilai Stream menjadi nilai lainnya jika Stream tidak selesai dalam durasi tertentu.
 /// cast digunakan untuk mengubah nilai Stream menjadi nilai lainnya jika Stream tidak selesai dalam durasi tertentu.
 /// toList digunakan untuk mengubah nilai Stream menjadi nilai lainnya jika Stream tidak selesai dalam durasi tertentu.
+/// Fold digunakan untuk melakukan combine nilai Stream menjadi nilai lainnya jika Stream tidak selesai dalam durasi tertentu.
+/// Reduce digunakan untuk mengcombine nilai Stream menjadi nilai lainnya jika Stream tidak selesai dalam durasi tertentu tanpa mengubah tipe data.
 /// Selengkapnya tentang Transform Stream bisa dibaca di https://api.dart.dev/stable/2.10.4/dart-async/Stream-class.html
 
 // example transform stream map
@@ -194,4 +196,40 @@ void main(){
   numbers()
       .map((value) => MapEntry(value, value * 2)) // ubah list menjadi map {1: 2, 2: 4, 3: 6, 4: 8, 5: 10}
       .listen((value) => print(value)); // cetak {1: 2, 2: 4, 3: 6, 4: 8, 5: 10}
+
+  // example transform stream fold
+  getStudentName('Dawu Umbara')
+      .fold<String>('', (previous, element) => previous + element) // gabungkan semua element menjadi satu string
+      // '' adalah nilai awal dari previous
+      // '', 'Dawu' => '' + 'Dawu' = 'Dawu'
+      // 'Dawu', ' ' => 'Dawu' + ' ' = 'Dawu '
+      // 'Dawu ', 'Umbara' => 'Dawu ' + 'Umbara' = 'Dawu Umbara'
+      .then((value) => print(value)); // cetak 'Dawu Umbara'
+
+  // example transform stream fold stream number
+  numbers()
+      .fold<int>(0, (previous, element) => previous + element) // tambahkan semua element menjadi satu integer
+      // 0 adalah nilai awal dari previous
+      // 0, 1 => 0 + 1 = 1
+      // 1, 2 => 1 + 2 = 3
+      // 3, 3 => 3 + 3 = 6
+      // 6, 4 => 6 + 4 = 10
+      // 10, 5 => 10 + 5 = 15
+      .then((value) => print(value)); // cetak 15
+
+  // example transform stream reduce
+  getStudentName('Dawu Umbara')
+      .reduce((value, element) => value + element) // gabungkan semua element menjadi satu string
+      // 'Dawu', ' ', 'Umbara' => 'Dawu' + ' ' + 'Umbara' = 'Dawu Umbara'
+      .then((value) => print(value)); // cetak 'Dawu Umbara'
+
+  // example transform stream reduce stream number
+  numbers()
+      .reduce((value, element) => value + element) // tambahkan semua element menjadi satu integer
+      // 1, 2 => 1 + 2 = 3
+      // 3, 3 => 3 + 3 = 6
+      // 6, 4 => 6 + 4 = 10
+      // 10, 5 => 10 + 5 = 15
+      // 15
+      .then((value) => print(value)); // cetak 15
 }

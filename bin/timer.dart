@@ -47,10 +47,4 @@ void main(){
     }
   }); // timer delay 3 seconds (tick)
   tickTimer.tick; // cek tick timer
-
-  // example timer cancel
-  Timer cancelTimer = Timer(Duration(seconds: 3), () {
-    print('Hello World from timer cancel');
-  }); // timer delay 3 seconds (cancel)
-  cancelTimer.cancel(); // cancel timer
 }
